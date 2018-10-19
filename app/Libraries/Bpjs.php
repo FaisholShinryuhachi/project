@@ -7,46 +7,149 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
 class Bpjs
-{	
+{	/*
+	A.	Referensi
+
+		1.	Diagnosa
+				public function diagnosa($diagnosa)
+		2.	Poli
+				public function poli($poli)
+		3.	Fasilitas Kesehatan
+				public function faskes($faskes, $jnsFaskes)
+		4.	Dokter DPJP
+				public function dokterDPJP($jnsPelayanan, $tglSep, $kdSpesialis)
+		5.	Propinsi
+				public function provinsi()
+		6.	Kabupaten
+				public function kabupaten($kdPropinsi)
+		7.	Kecamatan
+				public function kecamatan($kdKabupaten)
+		8.	Procedure / Tindakan (Hanya Untuk Lembar Pengajuan Klaim)
+				public function prosedur($kdProsedur)
+		9.	Kelas Rawat (Hanya Untuk Lembar Pengajuan Klaim)
+				public function kelasRawat()
+		10.	Dokter (Hanya Untuk Lembar Pengajuan Klaim)
+				Public function dokter($dokter)
+		11.	Spesialistik (Hanya Untuk Lembar Pengajuan Klaim)
+				public function spesialistik()
+		12.	Ruang Rawat (Hanya Untuk Lembar Pengajuan Klaim)
+				public function ruangRawat()
+		13.	Cara Keluar (Hanya Untuk Lembar Pengajuan Klaim)
+				public function caraKeluar()
+		14.	Pasca Pulang (Hanya Untuk Lembar Pengajuan Klaim)
+				public function pascaPulang()
+
+	B.	Peserta
+
+		1.	No.Kartu BPJS
+				public function getPesertaNoBpjs($noBpjs, $tglSep)
+		2.	NIK
+				public function getPesertaNik($nik, $tglSep)
+
+	C.	SEP
+
+		1.	Pembuatan SEP
+			a.	Insert SEP
+					public function insertSep(
+				 		$noKartu, $tglSep, $ppkPelayanan, $jnsPelayanan, $klsRawat, $noMR,
+				 		$asalRujukan, $tglRujukan, $noRujukan, $ppkRujukan, $catatan, $diagAwal, $tujuan, $eksekutif, $cob,
+				 		$katarak, $lakaLantas, $penjamin, $tglKejadian, $keterangan, $suplesi, $noSepSuplesi, $kdPropinsi,
+				 		$kdKabupaten, $kdKecamatan, $noSurat, $kodeDPJP, $noTelp, $user)
+			b.	Update SEP
+					public function updateSep(
+				 		$noSep, $klsRawat, $noMR, $catatan, $diagAwal, $eksekutif, $cob, $katarak,
+				 		$noSurat, $kodeDPJP, $lakaLantas, $penjamin, $tglKejadian, $keterangan, $suplesi, $noSepSuplesi,
+				 		$kdPropinsi, $kdKabupaten, $kdKecamatan)
+			c.	Hapus SEP
+					public function hapusSep($noSep, $user)
+			d.	Cari SEP
+					public function cariSep($noSep)
+		2.	Potensi Suplesi Jasa Raharja
+			a.	Suplesi Jasa Raharja
+					public function getSuplesiJasaRaharja($noKartu, $tglSep)
+		3.	Approval Penjaminan SEP
+			a.	Pengajuan
+					public function pengajuan(
+			    	$noKartu, $tglSep, $jnsPelayanan, $keterangan, $user)
+			b.	Aproval Pengajuan SEP
+					public function aprovalPengajuan(
+			    	$noKartu, $tglSep, $jnsPelayanan, $keterangan, $user)
+		4.	Update Tgl Pulang SEP
+			a.	Update Tgl Pulang SEP
+					public function updateTanggalPulang($noSep, $tglPulang, $ppkPelayanan)
+		5.	Integrasi SEP dan Inacbg
+			a.	Integrasi SEP dengan Inacbg
+					public function interCBG($noKartu)
+
+	D.	Rujukan
+
+		1.	Cari Rujukan pCare
+			a.	Rujukan Berdasarkan Nomor Rujukan
+					public function getRujukanNoRujukanPcare($noRujukan)
+			b.	Rujukan Berdasarkan Nomor Kartu (1 Record)
+					public function getRujukanNoKartuSinglePcare($noKartu)
+			c.	Rujukan Berdasarkan Nomor Kartu (Multi Record)
+					public function getRujukanNoKartuMultiPcare($noKartu)
+		2.	Cari Rujukan Rumah Sakit
+			a.	Rujukan Berdasarkan Nomor Rujukan
+					public function getRujukanNoRujukanRS($noRujukan)
+			b.	Rujukan Berdasarkan Nomor Kartu (1 Record)
+					public function getRujukanNoKartuSingleRS($noKartu)
+			c.	Rujukan Berdasarkan Nomor Kartu (Multi Record)
+					public function getRujukanNoKartuMultiRS($noKartu)
+		3.	Pembuatan Rujukan
+			a.	Insert Rujukan
+					public function insertRujukan($noSep, $tglRujukan, $ppkPelayanan, $jnsPelayanan, $catatan, $diagRujukan, $tipeRujukan,
+		 			$poliRujukan, $user)
+			b.	Update Rujukan
+					public function upadateRujukan($noRujukan, $ppkDirujuk, $tipe, $jnsPelayanan, $catatan, $diagRujukan, $tipeRujukan, 
+		 			$poliRujukan, $user)
+		c.	Delete Rujukan
+					public function hapusRujukan($noRujukan, $user)
+
+	E.	Lembar Pengajuan Klaim
+
+		1.	Insert LPK
+		  		public function insertLPK(
+		    	$noSep, $tglMasuk, $tglKeluar, $jaminan, $poli, $ruangRawat, $kelasRawat, $spesialistik, $caraKeluar,
+		    	$kondisiPulang, $kodeDiag1, $level1, $kodeDiag2, $level2, $kodePro1, $kodePro2, $tindakLanjut, $kodePPK, $tglKontrol, 
+		    	$DPJP, $user)
+		2.	Update LPK
+					public function updateLPK(
+		 		$noSep, $tglMasuk, $tglKeluar, $jaminan, $poli, $ruangRawat, $kelasRawat, $spesialistik, $caraKeluar,
+		 		$kondisiPulang, $kodeDiag1, $level1, $kodeDiag2, $level2, $kodePro1, $kodePro2, $tindakLanjut, $kodePPK, $tglKontrol,
+		 		$DPJP, $user)
+		3.	Delete LPK
+				public function hapusLPK($noSep)
+		4.	Data Lembar Pengajuan Klaim
+				public function getLPK($tglMasuk, $jnsPelayanan)
+
+	F.	Monitoring
+
+		1.	Data Kunjungan
+				public function getDataKunjungan($tglSep, $jnsPelayanan)
+		2.	Data Klaim
+				public function getDataKlaim($tglPulang, $jnsPelayanan, $statusKlaim)
+		3.	Data Histori Pelayanan Peserta
+				public function getDataHistoriPelayanan($noKartu, $tglMulai, $tglAkhir)
+		4.	Data Klaim Jaminan Jasa Raharja
+				public function getDataKlaimJaminanJasaRaharja($tglMulai, $tglAkhir)
+
+	G.	Ketersediaan Kamar
+
+		1.	Referensi Kamar
+				public function getReferensiKamar()
+		2.	Update Ketersediaan Tempat Tidur
+				public function updateRestBed($kodePPK, $kodekelas, $koderuang, $namaruang, $kapasitas, $tersedia, $tersediapria, 		$tersediawanita, $tersediapriawanita)
+		3.	Ruangan Baru
+				public function createRestBed($kodePPK, $kodekelas, $koderuang, $namaruang, $kapasitas, $tersedia, $tersediapria, 		$tersediawanita, $tersediapriawanita )
+		4.	Ketersediaan Kamar RS
+				public function readRestBed($kodePPK, $start, $limit)
+		5.	Hapus Ruangan
+				public function deleteRestBed($kodePPK, $kodekelas, $koderuang)
 
 
-	/*public function coba(){
-
-	 $data = "17163";
-   $secretKey = "4eVEB7D655";
-         // Computes the timestamp
-          date_default_timezone_set('UTC');
-          $tStamp = strval(time()-strtotime('1970-01-01 00:00:00'));
-           // Computes the signature by hashing the salt with the secret key as the key
-   $signature = hash_hmac('sha256', $data."&".$tStamp, $secretKey, true);
- 
-   // base64 encode…
-   $encodedSignature = base64_encode($signature);
- 
-   // urlencode…
-   // $encodedSignature = urlencode($encodedSignature);
- 
-   echo "X-cons-id: " .$data ."</br>";
-   echo "X-timestamp:" .$tStamp ."</br>";
-   echo "X-signature: " .$encodedSignature;
-
-
-   $url = "https://dvlp.bpjs-kesehatan.go.id/VClaim-Rest/Peserta/nokartu/0000648275139/tglSEP/2018-10-09";
-
- 		$client = new Client([
- 			'headers'=>	[
- 						'X-cons-id' => $data,
- 						'X-timestamp'=> $tStamp,
- 						'X-signature'=>  $encodedSignature
- 						]
- 			]);
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
-
-
-}*/
-
+	*/
 	protected static function headerCount(){
 
 			//$consId = config('app.cons-id');
@@ -73,10 +176,274 @@ class Bpjs
 
 	 /*
     |--------------------------------------------------------------------------
-    | Peserta
+    | Referensi
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     |--------------------------------------------------------------------------
     */
 
+
+     /*
+    |--------------------------------------------------------------------------
+    | Diagnosa
+    |--------------------------------------------------------------------------
+    */
+    public function diagnosa($diagnosa){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/diagnosa/".$diagnosa;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Poli
+    |--------------------------------------------------------------------------
+    */
+ 	 public function poli($poli){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/poli/".$poli;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Faskes
+    |--------------------------------------------------------------------------
+    */
+ 	 public function faskes($faskes, $jnsFaskes){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/faskes/".$faskes."/".$jnsFaskes;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Dokter DPJP
+    |--------------------------------------------------------------------------
+    */
+ 	public function dokterDPJP($jnsPelayanan, $tglSep, $kdSpesialis){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/dokter/pelayanan/".$jnsPelayanan."/tglPelayanan/".$tglSep."/Spesialis/".$kdSpesialis;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Provinsi
+    |--------------------------------------------------------------------------
+    */
+ 	public function provinsi(){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/propinsi";
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Kabupaten
+    |--------------------------------------------------------------------------
+    */
+ 	public function kabupaten($kdPropinsi){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/kabupaten/propinsi/".$kdPropinsi;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Kecamatan
+    |--------------------------------------------------------------------------
+    */
+ 	public function kecamatan($kdKabupaten){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/kecamatan/kabupaten/".$kdKabupaten;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Procedure / Tindakan (Hanya Untuk Lembar Pengajuan Klaim)
+    |--------------------------------------------------------------------------
+    */
+ 	public function prosedur($kdProsedur){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/procedure/".$kdProsedur;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+
+ 	/*
+    |--------------------------------------------------------------------------
+    | Kelas Rawat (Hanya Untuk Lembar Pengajuan Klaim)
+    |--------------------------------------------------------------------------
+    */
+ 	public function kelasRawat(){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/kelasrawat";
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Dokter (Hanya Untuk Lembar Pengajuan Klaim))
+    |--------------------------------------------------------------------------
+    */
+ 	public function dokter($dokter){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/dokter/".$dokter;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Spesialistik (Hanya Untuk Lembar Pengajuan Klaim)
+    |--------------------------------------------------------------------------
+    */
+ 	public function spesialistik(){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/spesialistik";
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Ruang Rawat (Hanya Untuk Lembar Pengajuan Klaim)
+    |--------------------------------------------------------------------------
+    */
+ 	public function ruangRawat(){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/ruangrawat";
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Cara Keluar (Hanya Untuk Lembar Pengajuan Klaim)
+    |--------------------------------------------------------------------------
+    */
+ 	public function caraKeluar(){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/carakeluar";
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	/*
+    |--------------------------------------------------------------------------
+    | Pasca Pulang (Hanya Untuk Lembar Pengajuan Klaim)
+    |--------------------------------------------------------------------------
+    */
+ 	public function pascaPulang(){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/pascapulang";
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+
+
+	 /*
+    |--------------------------------------------------------------------------
+    | Peserta
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | No.Kartu BPJS
+    |--------------------------------------------------------------------------
+    */
  	public function getPesertaNoBpjs($noBpjs, $tglSep){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Peserta/nokartu/".$noBpjs."/tglSEP/".$tglSep;
@@ -89,7 +456,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	 /*
+    |--------------------------------------------------------------------------
+    | NIK
+    |--------------------------------------------------------------------------
+    */
  	public function getPesertaNik($nik, $tglSep){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Peserta/nik/".$nik."/tglSEP/".$tglSep;
@@ -105,7 +476,24 @@ class Bpjs
 
  	 /*
     |--------------------------------------------------------------------------
-    | Pembuatan SEP
+    | SEP
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    */
+
+    /*
+    ===========================================================================
+    ==========================   Pembuatan SEP ================================
+    ===========================================================================
+    */
+
+
+     /*
+    |--------------------------------------------------------------------------
+    | Insert SEP
     |--------------------------------------------------------------------------
     */
 
@@ -182,7 +570,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Update SEP
+    |--------------------------------------------------------------------------
+    */
  	public function updateSep(
  		$noSep, $klsRawat, $noMR, $catatan, $diagAwal, $eksekutif, $cob, $katarak,
  		$noSurat, $kodeDPJP, $lakaLantas, $penjamin, $tglKejadian, $keterangan, $suplesi, $noSepSuplesi,
@@ -249,7 +641,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Hapus SEP
+    |--------------------------------------------------------------------------
+    */
  	public function hapusSep($noSep, $user)
  	{	
  		$data = [
@@ -274,7 +670,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Cari SEP
+    |--------------------------------------------------------------------------
+    */
  	public function cariSep($noSep)
  	{	             
 
@@ -290,8 +690,14 @@ class Bpjs
  	}
 
  	 /*
+    ===========================================================================
+    ====================  Potensi Suplesi Jasa Raharja ========================
+    ===========================================================================
+    */
+
+     /*
     |--------------------------------------------------------------------------
-    | Potensi Suplesi Jasa Raharja
+    | Suplesi Jasa Raharja
     |--------------------------------------------------------------------------
     */
 
@@ -309,10 +715,18 @@ class Bpjs
  	}
 
  	 /*
+    ===========================================================================
+    ====================  Aproval Penjamin SEP======== ========================
+    ===========================================================================
+    */
+
+
+     /*
     |--------------------------------------------------------------------------
-    | Aproval Pengajuan SEP
+    | Pengajuan
     |--------------------------------------------------------------------------
     */
+
     public function pengajuan(
     	$noKartu, $tglSep, $jnsPelayanan, $keterangan, $user)
  	{	
@@ -341,7 +755,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    | Aproval Pengajuan SEP
+    |--------------------------------------------------------------------------
+    */
  	 public function aprovalPengajuan(
     	$noKartu, $tglSep, $jnsPelayanan, $keterangan, $user)
  	{	
@@ -372,6 +790,12 @@ class Bpjs
  	}
 
  	 /*
+    ===========================================================================
+    ====================  Update Tanggal Pulang================================
+    ===========================================================================
+    */
+
+    /*
     |--------------------------------------------------------------------------
     | Update Tanggal Pulang
     |--------------------------------------------------------------------------
@@ -403,9 +827,17 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
+
+
+ 	 /*
+    ===========================================================================
+    ====================  Integrasi SEP dan Inacbg ============================
+    ===========================================================================
+    */
+
  	 /*
     |--------------------------------------------------------------------------
-    | Aproval Pengajuan SEP
+    | Integrasi SEP dengan Inacbg
     |--------------------------------------------------------------------------
     */
      public function interCBG($noKartu){
@@ -420,202 +852,31 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
- 	 /*
-    |--------------------------------------------------------------------------
-    | Referensi
-    |--------------------------------------------------------------------------
-    */
-
-    public function diagnosa($diagnosa){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/diagnosa/".$diagnosa;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	 public function poli($poli){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/poli/".$poli;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	 public function faskes($faskes, $jnsFaskes){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/faskes/".$faskes."/".$jnsFaskes;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function dokterDPJP($jnsPelayanan, $tglSep, $kdSpesialis){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/dokter/pelayanan/".$jnsPelayanan."/tglPelayanan/".$tglSep."/Spesialis/".$kdSpesialis;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function provinsi(){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/propinsi";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function kabupaten($kdPropinsi){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/kabupaten/propinsi/".$kdPropinsi;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function kecamatan($kdKabupaten){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/kecamatan/kabupaten/".$kdKabupaten;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function prosedur($kdProsedur){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/procedure/".$kdProsedur;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
-
- 	public function kelasRawat(){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/kelasrawat";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function dokter($dokter){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/dokter/".$dokter;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function spesialistik(){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/spesialistik";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function ruangRawat(){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/ruangrawat";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function caraKeluar(){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/carakeluar";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
- 	public function pascaPulang(){
-
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/pascapulang";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
- 	}
-
+ 	
  	/*
     |--------------------------------------------------------------------------
     | Rujukan
     |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
 
-    public function getRujukanNoRujukan($noRujukan){
+     /*
+    ===========================================================================
+    ==========================  Cari Rujukan Pcare ============================
+    ===========================================================================
+    */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rujukan Berdasarkan Nomor Rujukan Pcare
+    |--------------------------------------------------------------------------
+    */
+
+    public function getRujukanNoRujukanPcare($noRujukan){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/".$noRujukan;
  		
@@ -627,8 +888,12 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
- 	 public function getRujukanNoKartuSingle($noKartu){
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Rujukan Berdasarkan Nomor Kartu (1 Record) Pcare
+    |--------------------------------------------------------------------------
+    */
+ 	 public function getRujukanNoKartuSinglePcare($noKartu){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/Peserta/".$noKartu;
  		
@@ -640,6 +905,96 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Rujukan Berdasarkan Nomor Kartu (Multi Record) Pcare
+    |--------------------------------------------------------------------------
+    */
+     public function getRujukanNoKartuMultiPcare($noKartu){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/List/Peserta/".$noKartu;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	 /*
+    ===========================================================================
+    ==========================  Cari Rujukan Rumahsakit =======================
+    ===========================================================================
+    */
+
+
+     /*
+    |--------------------------------------------------------------------------
+    | Rujukan Berdasarkan Nomor Rujukan Rumahsakit
+    |--------------------------------------------------------------------------
+    */
+
+    public function getRujukanNoRujukanRS($noRujukan){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/RS/".$noRujukan;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Rujukan Berdasarkan Nomor Kartu (1 Record) Rumahsakit
+    |--------------------------------------------------------------------------
+    */
+ 	 public function getRujukanNoKartuSingleRS($noKartu){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."/Rujukan/RS/Peserta/".$noKartu;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Rujukan Berdasarkan Nomor Kartu (Multi Record) Rumahsakit
+    |--------------------------------------------------------------------------
+    */
+     public function getRujukanNoKartuMultiRS($noKartu){
+
+ 		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/RS/Peserta/".$noKartu;
+ 		
+ 		$client = new Client([
+ 			'headers'=>	$this->headerCount()
+ 			]);
+
+ 		$response = $client->request('GET',$url);
+ 		$data = $response->getBody();
+ 		return $data;
+ 	}
+
+
+ 	 /*
+    ===========================================================================
+    ========================  Pembuatan Rujukan ===============================
+    ===========================================================================
+    */
+
+
+     /*
+    |--------------------------------------------------------------------------
+    | Insert Rujukan
+    |--------------------------------------------------------------------------
+    */
 
  	public function insertRujukan($noSep, $tglRujukan, $ppkPelayanan, $jnsPelayanan, $catatan, $diagRujukan, $tipeRujukan,
  		$poliRujukan, $user)
@@ -674,6 +1029,11 @@ class Bpjs
  		return $data;
  	}
 
+ 	/*
+    |--------------------------------------------------------------------------
+    | Update Rujukan
+    |--------------------------------------------------------------------------
+    */ 
  	public function upadateRujukan($noRujukan, $ppkDirujuk, $tipe, $jnsPelayanan, $catatan, $diagRujukan, $tipeRujukan, 
  		$poliRujukan, $user)
  	{	
@@ -706,7 +1066,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    | Delete Rujukan
+    |--------------------------------------------------------------------------
+    */ 
  	public function hapusRujukan($noRujukan, $user)
  	{	
 	 	$data =  [
@@ -736,7 +1100,16 @@ class Bpjs
     |--------------------------------------------------------------------------
     | Lembar Pengajuan Klaim
     |--------------------------------------------------------------------------
+	|--------------------------------------------------------------------------
+	|--------------------------------------------------------------------------
+	|--------------------------------------------------------------------------
     */
+
+	/*
+    |--------------------------------------------------------------------------
+    | Insert LPK
+    |--------------------------------------------------------------------------
+    */ 
 
     public function insertLPK(
     	$noSep, $tglMasuk, $tglKeluar, $jaminan, $poli, $ruangRawat, $kelasRawat, $spesialistik, $caraKeluar,
@@ -807,7 +1180,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    | Update LPK
+    |--------------------------------------------------------------------------
+    */ 
  	public function updateLPK(
  		$noSep, $tglMasuk, $tglKeluar, $jaminan, $poli, $ruangRawat, $kelasRawat, $spesialistik, $caraKeluar,
  		$kondisiPulang, $kodeDiag1, $level1, $kodeDiag2, $level2, $kodePro1, $kodePro2, $tindakLanjut, $kodePPK, $tglKontrol,
@@ -877,7 +1254,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    | Delete LPK
+    |--------------------------------------------------------------------------
+    */ 
  	public function hapusLPK($noSep)
  	{	
  		$data = [
@@ -901,7 +1282,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    | Data Lembar Pengajuan Klaim
+    |--------------------------------------------------------------------------
+    */ 
  	 public function getLPK($tglMasuk, $jnsPelayanan){
 
  		$url = config('app.baseUrl').config('app.serviceName')."LPK/TglMasuk/".$tglMasuk."/JnsPelayanan/".$jnsPelayanan;
@@ -919,8 +1304,17 @@ class Bpjs
     |--------------------------------------------------------------------------
     | Monitoring
     |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Data Kunjungan
+    |--------------------------------------------------------------------------
+    */ 
      public function getDataKunjungan($tglSep, $jnsPelayanan){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Monitoring/Kunjungan/Tanggal/".$tglSEP."/JnsPelayanan/".$jnsPelayanan;
@@ -933,7 +1327,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	  /*
+    |--------------------------------------------------------------------------
+    | Data Klaim
+    |--------------------------------------------------------------------------
+    */ 
  	public function getDataKlaim($tglPulang, $jnsPelayanan, $statusKlaim){
 
  		$url = config('app.baseUrl').config('app.serviceName')."/Monitoring/Klaim/Tanggal/".$tglPulang."/JnsPelayanan/".$jnsPelayanan."/Status/".$statusKlaim;
@@ -946,7 +1344,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	 /*
+    |--------------------------------------------------------------------------
+    | Data Histori Pelayanan Peserta
+    |--------------------------------------------------------------------------
+    */ 
  	public function getDataHistoriPelayanan($noKartu, $tglMulai, $tglAkhir){
 
  		$url = config('app.baseUrl').config('app.serviceName')."/monitoring/HistoriPelayanan/NoKartu/".$noKartu."/tglMulai/".$tglMulai."/tglAkhir/".$tglAkhir;
@@ -959,7 +1361,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	 /*
+    |--------------------------------------------------------------------------
+    |Data Klaim Jaminan Jasa Raharja
+    |--------------------------------------------------------------------------
+    */ 
  	public function getDataKlaimJaminanJasaRaharja($tglMulai, $tglAkhir){
 
  		$url = config('app.baseUrl').config('app.serviceName')."monitoring/JasaRaharja/tglMulai/".$tglMulai."/tglAkhir/".$tglAkhir;
@@ -976,8 +1382,15 @@ class Bpjs
     |--------------------------------------------------------------------------
     | Ketersedian Kamar
     |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
-
+     /*
+    |--------------------------------------------------------------------------
+    |	Referensi Kamar
+    |--------------------------------------------------------------------------
+    */ 
     public function getReferensiKamar(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."aplicaresws/rest/ref/kelas";
@@ -989,7 +1402,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    |	Update Ketersediaan Tempat Tidur
+    |--------------------------------------------------------------------------
+    */ 
  	public function updateRestBed($kodePPK, $kodekelas, $koderuang, $namaruang, $kapasitas, $tersedia, $tersediapria, $tersediawanita, $tersediapriawanita)
  	{	
  		$data =  [
@@ -1016,7 +1433,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    |	Ruangan Baru
+    |--------------------------------------------------------------------------
+    */ 
  	public function createRestBed($kodePPK, $kodekelas, $koderuang, $namaruang, $kapasitas, $tersedia, $tersediapria, $tersediawanita, $tersediapriawanita )
  	{	
  		$data =   [ 
@@ -1043,7 +1464,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    |	Ketersediaan Kamar RS
+    |--------------------------------------------------------------------------
+    */ 
  	public function readRestBed($kodePPK, $start, $limit){
 
  		$url = config('app.baseUrl').config('app.serviceName')."/rest/bed/read/".$kodePPK."/".$start."/".$limit;
@@ -1055,7 +1480,11 @@ class Bpjs
  		$data = $response->getBody();
  		return $data;
  	}
-
+ 	/*
+    |--------------------------------------------------------------------------
+    |	Hapus Ruangan
+    |--------------------------------------------------------------------------
+    */ 
  	public function deleteRestBed($kodePPK, $kodekelas, $koderuang)
  	{	
  		$data =   [ "kodekelas"=>$kodekelas, 

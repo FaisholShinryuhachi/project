@@ -174,7 +174,28 @@ class Bpjs
  						);
 	}
 
+	public static function api($url, $method, $data = null){
+
+		if ($data == null){
+
+	 		$client = new Client([
+	 			'headers'=>	self::headerCount()
+	 			]);
+ 		}
+
+ 		else{
+ 			$client = new Client([
+	 			'headers'=>	self::headerCount(),
+	 			'body'	=> $data
+	 			]);
+ 		}
+
+ 		$response = $client->request($method, $url);
+ 		$data = $response->getBody();
+ 		return $data;
+	}
 	 /*
+	}
     |--------------------------------------------------------------------------
     | Referensi
     |--------------------------------------------------------------------------
@@ -194,13 +215,7 @@ class Bpjs
     public function diagnosa($diagnosa){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/diagnosa/".$diagnosa;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -212,12 +227,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/poli/".$poli;
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -227,14 +237,8 @@ class Bpjs
     */
  	 public function faskes($faskes, $jnsFaskes){
 
- 		$url = config('app.baseUrl').config('app.serviceName')."referensi/faskes/".$faskes."/".$jnsFaskes;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$url = config('app.baseUrl').config('app.serviceName')."referensi/faskes/".$faskes."/".$jnsFaskes;	
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -245,13 +249,7 @@ class Bpjs
  	public function dokterDPJP($jnsPelayanan, $tglSep, $kdSpesialis){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/dokter/pelayanan/".$jnsPelayanan."/tglPelayanan/".$tglSep."/Spesialis/".$kdSpesialis;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -262,13 +260,7 @@ class Bpjs
  	public function provinsi(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/propinsi";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -279,13 +271,7 @@ class Bpjs
  	public function kabupaten($kdPropinsi){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/kabupaten/propinsi/".$kdPropinsi;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -296,13 +282,7 @@ class Bpjs
  	public function kecamatan($kdKabupaten){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/kecamatan/kabupaten/".$kdKabupaten;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -313,13 +293,7 @@ class Bpjs
  	public function prosedur($kdProsedur){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/procedure/".$kdProsedur;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -331,13 +305,7 @@ class Bpjs
  	public function kelasRawat(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/kelasrawat";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+	 	$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -348,13 +316,7 @@ class Bpjs
  	public function dokter($dokter){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/dokter/".$dokter;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -365,13 +327,7 @@ class Bpjs
  	public function spesialistik(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/spesialistik";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -382,13 +338,7 @@ class Bpjs
  	public function ruangRawat(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/ruangrawat";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -399,13 +349,7 @@ class Bpjs
  	public function caraKeluar(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/carakeluar";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -416,13 +360,7 @@ class Bpjs
  	public function pascaPulang(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."referensi/pascapulang";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -447,13 +385,7 @@ class Bpjs
  	public function getPesertaNoBpjs($noBpjs, $tglSep){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Peserta/nokartu/".$noBpjs."/tglSEP/".$tglSep;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	 /*
@@ -464,13 +396,7 @@ class Bpjs
  	public function getPesertaNik($nik, $tglSep){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Peserta/nik/".$nik."/tglSEP/".$tglSep;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -561,13 +487,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."SEP/1.1/insert";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
  	 /*
@@ -632,13 +552,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."SEP/1.1/Update";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('PUT',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'PUT', $data);
  		return $data;
  	}
  	 /*
@@ -660,14 +574,7 @@ class Bpjs
         $data = json_encode($data);
 
  		$url = config('app.baseUrl').config('app.serviceName')."SEP/Delete";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('DELETE',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'DELETE', $data);
  		return $data;
  	}
  	 /*
@@ -679,13 +586,7 @@ class Bpjs
  	{	             
 
  		$url = config('app.baseUrl').config('app.serviceName')."SEP/".$noSep;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -704,13 +605,7 @@ class Bpjs
     public function getSuplesiJasaRaharja($noKartu, $tglSep){
 
  		$url = config('app.baseUrl').config('app.serviceName')."sep/JasaRaharja/Suplesi/".$noKartu."/tglPelayanan/".$tglSep;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -746,13 +641,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."Sep/pengajuanSEP";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
  	/*
@@ -779,13 +668,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."Sep/aprovalSEP";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
 
@@ -818,13 +701,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."Sep/updtglplg";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('PUT',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'PUT', $data);
  		return $data;
  	}
 
@@ -843,13 +720,7 @@ class Bpjs
      public function interCBG($noKartu){
 
  		$url = config('app.baseUrl').config('app.serviceName')."sep/cbg/".$noKartu;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	
@@ -879,13 +750,7 @@ class Bpjs
     public function getRujukanNoRujukanPcare($noRujukan){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/".$noRujukan;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	 /*
@@ -896,13 +761,7 @@ class Bpjs
  	 public function getRujukanNoKartuSinglePcare($noKartu){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/Peserta/".$noKartu;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	 /*
@@ -913,13 +772,7 @@ class Bpjs
      public function getRujukanNoKartuMultiPcare($noKartu){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/List/Peserta/".$noKartu;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	 /*
@@ -938,14 +791,7 @@ class Bpjs
     public function getRujukanNoRujukanRS($noRujukan){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/RS/".$noRujukan;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
- 		return $data;
+ 		$data = $this->api($url, 'GET');
  	}
  	 /*
     |--------------------------------------------------------------------------
@@ -955,13 +801,7 @@ class Bpjs
  	 public function getRujukanNoKartuSingleRS($noKartu){
 
  		$url = config('app.baseUrl').config('app.serviceName')."/Rujukan/RS/Peserta/".$noKartu;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	 /*
@@ -972,13 +812,7 @@ class Bpjs
      public function getRujukanNoKartuMultiRS($noKartu){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/RS/Peserta/".$noKartu;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -1019,13 +853,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/insert";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
 
@@ -1057,13 +885,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/update";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('PUT',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'PUT', $data);
  		return $data;
  	}
  	/*
@@ -1085,14 +907,7 @@ class Bpjs
         $data = json_encode($data);
 
  		$url = config('app.baseUrl').config('app.serviceName')."Rujukan/delete";
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('DELETE',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'DELETE', $data);
  		return $data;
  	}
 
@@ -1171,13 +986,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."LPK/insert";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
  	/*
@@ -1245,13 +1054,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."LPK/insert";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('PUT',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'PUT', $data);
  		return $data;
  	}
  	/*
@@ -1273,13 +1076,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."LPK/delete";
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('DELETE',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'DELETE', $data);
  		return $data;
  	}
  	/*
@@ -1290,13 +1087,7 @@ class Bpjs
  	 public function getLPK($tglMasuk, $jnsPelayanan){
 
  		$url = config('app.baseUrl').config('app.serviceName')."LPK/TglMasuk/".$tglMasuk."/JnsPelayanan/".$jnsPelayanan;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -1318,13 +1109,7 @@ class Bpjs
      public function getDataKunjungan($tglSep, $jnsPelayanan){
 
  		$url = config('app.baseUrl').config('app.serviceName')."Monitoring/Kunjungan/Tanggal/".$tglSEP."/JnsPelayanan/".$jnsPelayanan;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');;
  		return $data;
  	}
  	  /*
@@ -1335,13 +1120,7 @@ class Bpjs
  	public function getDataKlaim($tglPulang, $jnsPelayanan, $statusKlaim){
 
  		$url = config('app.baseUrl').config('app.serviceName')."/Monitoring/Klaim/Tanggal/".$tglPulang."/JnsPelayanan/".$jnsPelayanan."/Status/".$statusKlaim;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	 /*
@@ -1352,13 +1131,7 @@ class Bpjs
  	public function getDataHistoriPelayanan($noKartu, $tglMulai, $tglAkhir){
 
  		$url = config('app.baseUrl').config('app.serviceName')."/monitoring/HistoriPelayanan/NoKartu/".$noKartu."/tglMulai/".$tglMulai."/tglAkhir/".$tglAkhir;
- 		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	 /*
@@ -1369,12 +1142,7 @@ class Bpjs
  	public function getDataKlaimJaminanJasaRaharja($tglMulai, $tglAkhir){
 
  		$url = config('app.baseUrl').config('app.serviceName')."monitoring/JasaRaharja/tglMulai/".$tglMulai."/tglAkhir/".$tglAkhir;
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
 
@@ -1394,12 +1162,7 @@ class Bpjs
     public function getReferensiKamar(){
 
  		$url = config('app.baseUrl').config('app.serviceName')."aplicaresws/rest/ref/kelas";
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -1424,13 +1187,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."aplicaresws/rest/bed/update/".$kodePPK;
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
  	/*
@@ -1455,13 +1212,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."rest/bed/create/".$kodePPK;
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
  	/*
@@ -1472,12 +1223,7 @@ class Bpjs
  	public function readRestBed($kodePPK, $start, $limit){
 
  		$url = config('app.baseUrl').config('app.serviceName')."/rest/bed/read/".$kodePPK."/".$start."/".$limit;
- 		$client = new Client([
- 			'headers'=>	$this->headerCount()
- 			]);
-
- 		$response = $client->request('GET',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'GET');
  		return $data;
  	}
  	/*
@@ -1495,13 +1241,7 @@ class Bpjs
 
  		$url = config('app.baseUrl').config('app.serviceName')."aplicaresws/rest/bed/delete/".$kodePPK;
  		
- 		$client = new Client([
- 			'headers'=>	$this->headerCount(),
- 			'body' => $data
- 			]);
-
- 		$response = $client->request('POST',$url);
- 		$data = $response->getBody();
+ 		$data = $this->api($url, 'POST', $data);
  		return $data;
  	}
 }
